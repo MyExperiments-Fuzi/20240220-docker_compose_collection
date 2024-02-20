@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+  mysql:
+    container_name: mysql_db
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - mysql_volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: kucing
+      MYSQL_USER: fuzi
+      MYSQL_PASSWORD: kucing
+      TZ: Asia/Jakarta 
+    ports:
+      - 3308:3306
+    expose:
+      - 3308
+    networks:
+      - fuzi
+
+  phpmyadmin:
+    container_name: phpmyadmin_gui
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - 8083:80
+    environment:
+      PMA_HOST: mysql
+    depends_on:
+      - mysql
+    networks:
+      - fuzi
+
+volumes:
+  mysql_volume:
+
+networks:
+  fuzi:
+
+    # COMMAND to GRANT PRIVILEGES =
+    # docker-compose up -d
+    # docker exec -it id/name_container /bin/bash
+    # mysql -u root -p
+    # mysql> select user, host from mysql.user;
+    # mysql> show grants;
+    # mysql> CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+    # mysql> GRANT ALL PRIVILEGES ON * . * TO 'user'@'localhost';
+    # mysql> FLUSH PRIVILEGES;
